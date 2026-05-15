@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 namespace CMS.Data.entities
 {
    
-        namespace CMS.Data.Entities
-    {
+   
         public class Post
         {
             public int Id { get; set; }
@@ -24,5 +23,4 @@ namespace CMS.Data.entities
     }
 
 
-}
 

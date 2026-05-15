@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace CMS.Data.entities
 {
-    namespace CMS.Data.Entities {
+ 
     public class Category {
         public int Id { get; set; }
         public string Name { get; set; } // Tên danh mục (vd: Tin Giáo Dục)
@@ -23,4 +23,4 @@ namespace CMS.Data.entities
     }
 }
 
-}
+

@@ -1,0 +1,38 @@
+﻿@model IEnumerable<CMS.Data.entities.User>
+
+@{
+    ViewData["Title"] = "Danh sách thành viên";
+}
+
+<h1 class="text-primary mb-4">
+    DANH SÁCH THÀNH VIÊN QUẢN TRỊ
+</h1>
+
+<table class="table table-bordered table-hover">
+
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Tài khoản</th>
+            <th>Họ và tên</th>
+            <th>Vai trò</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Id</td>
+                <td>@user.Username</td>
+                <td>@user.FullName</td>
+                <td>
+                    <span class="badge bg-primary">
+                        @user.Role
+                    </span>
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>

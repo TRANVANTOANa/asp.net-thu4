@@ -1,0 +1,66 @@
+﻿@model CMS.Data.entities.Post
+
+<div class="container mt-5">
+
+    <nav aria-label="breadcrumb">
+
+        <ol class="breadcrumb">
+
+            <li class="breadcrumb-item">
+                <a href="/Post">
+                    Danh sách bài viết
+                </a>
+            </li>
+
+            <li class="breadcrumb-item active">
+                Chi tiết bài viết
+            </li>
+
+        </ol>
+
+    </nav>
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-10">
+
+            <h1 class="display-5 fw-bold text-primary mb-3">
+                @Model.Title
+            </h1>
+
+            <p class="text-muted">
+                Đăng ngày:
+                @Model.CreatedDate.ToString("dd/MM/yyyy HH:mm")
+            </p>
+
+            <hr />
+
+            <div class="mb-4 text-center">
+
+                <img src="@Model.ImageUrl"
+                     class="img-fluid rounded shadow"
+                     style="width:100%; max-height:500px; object-fit:cover;"
+                     alt="Post Image">
+
+            </div>
+
+            <div class="fs-5 lh-lg">
+
+                @Model.Content
+
+            </div>
+
+            <div class="mt-5">
+
+                <a href="/Post"
+                   class="btn btn-secondary">
+                    ← Quay lại danh sách
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

@@ -2,7 +2,152 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome-Trần Văn Toàn</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-5">
+
+    <!-- HERO -->
+    <div class="p-5 mb-5 bg-dark text-white rounded shadow">
+
+        <div class="row align-items-center">
+
+            <div class="col-md-8">
+
+                <h1 class="display-4 fw-bold">
+                    CMS Management System
+                </h1>
+                <p class="fs-4 text-warning mt-3">
+                    Xin chào, Trần Văn Toàn 👋
+                </p>
+
+
+                <p class="lead mt-3">
+                    Hệ thống quản lý bài viết, danh mục và thành viên
+                    được xây dựng bằng ASP.NET Core MVC.
+                </p>
+
+                <div class="mt-4">
+
+                    <a href="/Post"
+                       class="btn btn-primary btn-lg me-2">
+                        Quản lý bài viết
+                    </a>
+
+                    <a href="/User"
+                       class="btn btn-outline-light btn-lg">
+                        Quản lý thành viên
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="col-md-4 text-center">
+
+                <img src="https://cdn-icons-png.flaticon.com/512/1055/1055687.png"
+                     class="img-fluid"
+                     style="max-height:220px;" />
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="row">
+
+        <!-- POST -->
+        <div class="col-md-4 mb-4">
+
+            <div class="card shadow border-0 h-100">
+
+                <div class="card-body text-center">
+
+                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
+                         width="90"
+                         class="mb-3" />
+
+                    <h3 class="text-primary">
+                        POSTS
+                    </h3>
+
+                    <p class="text-muted">
+                        Quản lý danh sách bài viết,
+                        nội dung và hình ảnh.
+                    </p>
+
+                    <a href="/Post"
+                       class="btn btn-outline-primary">
+                        Đi đến Post
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- CATEGORY -->
+        <div class="col-md-4 mb-4">
+
+            <div class="card shadow border-0 h-100">
+
+                <div class="card-body text-center">
+
+                    <img src="https://cdn-icons-png.flaticon.com/512/3523/3523887.png"
+                         width="90"
+                         class="mb-3" />
+
+                    <h3 class="text-success">
+                        CATEGORY
+                    </h3>
+
+                    <p class="text-muted">
+                        Quản lý danh mục bài viết
+                        và phân loại nội dung.
+                    </p>
+
+                    <a href="/Category"
+                       class="btn btn-outline-success">
+                        Đi đến Category
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- USER -->
+        <div class="col-md-4 mb-4">
+
+            <div class="card shadow border-0 h-100">
+
+                <div class="card-body text-center">
+
+                    <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
+                         width="90"
+                         class="mb-3" />
+
+                    <h3 class="text-danger">
+                        USERS
+                    </h3>
+
+                    <p class="text-muted">
+                        Quản lý thành viên,
+                        phân quyền và tài khoản.
+                    </p>
+
+                    <a href="/User"
+                       class="btn btn-outline-danger">
+                        Đi đến User
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
