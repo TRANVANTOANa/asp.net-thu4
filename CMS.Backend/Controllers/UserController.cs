@@ -1,40 +1,27 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using CMS.Data.entities; // Phải có dòng này để dùng lớp User
+using CMS.Data.entities; // Dùng lớp User và ApplicationDbContext
+using System.Linq; // Cần thiết để sử dụng hàm .ToList()
 
 namespace CMS.Backend.Controllers
 {
     public class UserController : Controller
     {
-        // Hàm Index: Hiển thị danh sách thành viên quản trị
+        // 1. Khai báo thuộc tính ngữ cảnh cơ sở dữ liệu
+        private readonly ApplicationDbContext _context;
+
+        // 2. Sử dụng Constructor Injection để truyền DbContext vào Controller
+        public UserController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        // Hàm Index: Hiển thị danh sách thành viên quản trị LẤY TỪ DATABASE THẬT
         public IActionResult Index()
         {
-            // 1. Tạo danh sách Người dùng giả (Mock Data)
-            var users = new List<User>
-            {
-                new User
-                {
-                    Id = 1,
-                    Username = "admin_thai",
-                    FullName = "Nguyễn Cao Thái",
-                    Role = "Administrator"
-                },
-                new User
-                {
-                    Id = 2,
-                    Username = "editor_01",
-                    FullName = "Trần Văn Biên Tập",
-                    Role = "Editor"
-                },
-                new User
-                {
-                    Id = 3,
-                    Username = "author_minh",
-                    FullName = "Lê Quang Minh",
-                    Role = "Author"
-                }
-            };
+            // Lấy toàn bộ danh sách người dùng từ bảng User trong cơ sở dữ liệu
+            var users = _context.Users.ToList();
 
-            // 2. Trả về View kèm theo danh sách người dùng
+            // Trả về View kèm theo danh sách người dùng thật
             return View(users);
         }
     }
