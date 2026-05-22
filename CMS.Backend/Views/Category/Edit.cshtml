@@ -1,0 +1,67 @@
+@model CMS.Data.Entities.Category
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Cập Nhật Danh Mục";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-0 shadow-lg rounded-lg">
+                <div class="card-header bg-warning text-dark text-center py-4 rounded-top">
+                    <h3 class="card-title mb-0 text-uppercase font-weight-bold">
+                        <i class="bi bi-pencil-square me-2"></i>Cập Nhật Danh Mục
+                    </h3>
+                    <p class="mb-0 text-dark-50 mt-1">Chỉnh sửa thông tin chuyên mục dưới đây</p>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Edit" method="post">
+                        <!-- Hidden field for Id (Crucial for ASP.NET MVC binding) -->
+                        <input type="hidden" asp-for="Id" />
+
+                        <!-- Name Input -->
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label font-weight-bold text-secondary">Tên Danh Mục <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-secondary"><i class="bi bi-tag"></i></span>
+                                <input asp-for="Name" class="form-control" placeholder="Tên danh mục..." required />
+                            </div>
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Description Input -->
+                        <div class="mb-4">
+                            <label asp-for="Description" class="form-label font-weight-bold text-secondary">Mô Tả Danh Mục</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-secondary"><i class="bi bi-chat-left-text"></i></span>
+                                <textarea asp-for="Description" class="form-control" rows="4" placeholder="Nhập mô tả mới..."></textarea>
+                            </div>
+                            <span asp-validation-for="Description" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="/Category" class="btn btn-outline-secondary px-4 py-2 rounded-pill">
+                                <i class="bi bi-arrow-left me-1"></i> Quay lại
+                            </a>
+                            <button type="submit" class="btn btn-warning text-dark px-4 py-2 rounded-pill shadow-sm font-weight-bold">
+                                <i class="bi bi-save-fill me-1"></i> Cập nhật thay đổi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .rounded-lg {
+        border-radius: 16px !important;
+    }
+    .rounded-top {
+        border-top-left-radius: 16px !important;
+        border-top-right-radius: 16px !important;
+    }
+</style>

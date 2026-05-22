@@ -1,0 +1,64 @@
+@model CMS.Data.Entities.Category
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Thêm Danh Mục Mới";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-0 shadow-lg rounded-lg">
+                <div class="card-header bg-primary text-white text-center py-4 rounded-top">
+                    <h3 class="card-title mb-0 text-uppercase font-weight-bold">
+                        <i class="bi bi-folder-plus me-2"></i>Thêm Danh Mục Mới
+                    </h3>
+                    <p class="mb-0 text-white-50 mt-1">Điền thông tin bên dưới để khởi tạo một chuyên mục mới</p>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create" method="post">
+                        <!-- Name Input -->
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label font-weight-bold text-secondary">Tên Danh Mục <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-secondary"><i class="bi bi-tag"></i></span>
+                                <input asp-for="Name" class="form-control" placeholder="Ví dụ: Góc Lập Trình, Du Lịch..." required />
+                            </div>
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Description Input -->
+                        <div class="mb-4">
+                            <label asp-for="Description" class="form-label font-weight-bold text-secondary">Mô Tả Danh Mục</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-secondary"><i class="bi bi-chat-left-text"></i></span>
+                                <textarea asp-for="Description" class="form-control" rows="4" placeholder="Nhập mô tả ngắn về chuyên mục này..."></textarea>
+                            </div>
+                            <span asp-validation-for="Description" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="/Category" class="btn btn-outline-secondary px-4 py-2 rounded-pill">
+                                <i class="bi bi-arrow-left me-1"></i> Quay lại
+                            </a>
+                            <button type="submit" class="btn btn-primary px-4 py-2 rounded-pill shadow-sm">
+                                <i class="bi bi-check-circle-fill me-1"></i> Lưu dữ liệu
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .rounded-lg {
+        border-radius: 16px !important;
+    }
+    .rounded-top {
+        border-top-left-radius: 16px !important;
+        border-top-right-radius: 16px !important;
+    }
+</style>

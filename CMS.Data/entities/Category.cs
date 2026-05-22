@@ -1,4 +1,4 @@
-﻿//Sinh viên:Trần Văn Toàn
+//Sinh viên:Trần Văn Toàn
 //Mssv:2123110187
 //lớp:CCQ2311F
 //Mô tả:quản lí danh mục
@@ -10,17 +10,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CMS.Data.entities
+namespace CMS.Data.Entities
 {
- 
-    public class Category {
+    // Lớp quản lý danh mục bài viết
+    public class Category
+    {
+        // Mã định danh danh mục (khóa chính)
         public int Id { get; set; }
-        public string Name { get; set; } // Tên danh mục (vd: Tin Giáo Dục)
-        public string Description { get; set; }
-        
-        // Quan hệ: Một danh mục có nhiều bài viết
-        public virtual ICollection<Post> Posts { get; set; } 
+
+        // Tên danh mục (ví dụ: Tin Giáo Dục)
+        public string Name { get; set; }
+
+        // Mô tả chi tiết về danh mục
+        public string? Description { get; set; }
+
+        // Danh sách các bài viết thuộc danh mục này (quan hệ một-nhiều)
+        public virtual ICollection<Post> Posts { get; set; }
     }
 }
-
-

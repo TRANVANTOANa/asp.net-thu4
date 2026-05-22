@@ -1,28 +1,84 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using CMS.Data.entities; // Dùng lớp User và ApplicationDbContext
-using System.Linq; // Cần thiết để sử dụng hàm .ToList()
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using CMS.Data;
+using CMS.Data.Entities;
+using System.Linq;
 
 namespace CMS.Backend.Controllers
 {
     public class UserController : Controller
     {
-        // 1. Khai báo thuộc tính ngữ cảnh cơ sở dữ liệu
         private readonly ApplicationDbContext _context;
 
-        // 2. Sử dụng Constructor Injection để truyền DbContext vào Controller
         public UserController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // Hàm Index: Hiển thị danh sách thành viên quản trị LẤY TỪ DATABASE THẬT
         public IActionResult Index()
         {
-            // Lấy toàn bộ danh sách người dùng từ bảng User trong cơ sở dữ liệu
             var users = _context.Users.ToList();
-
-            // Trả về View kèm theo danh sách người dùng thật
             return View(users);
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(User model)
+        {
+            if (_context.Users.Any(u => u.Username == model.Username))
+            {
+                ModelState.AddModelError("Username", "Tên đăng nhập này đã có người dùng!");
+                return View(model);
+            }
+
+            _context.Users.Add(model);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var user = _context.Users.Find(id);
+            if (user == null) return NotFound();
+            return View(user);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(User model, string NewPassword)
+        {
+            var existingUser = _context.Users.AsNoTracking().FirstOrDefault(u => u.Id == model.Id);
+            if (existingUser == null) return NotFound();
+
+            if (!string.IsNullOrEmpty(NewPassword))
+            {
+                model.PasswordHash = NewPassword;
+            }
+            else
+            {
+                model.PasswordHash = existingUser.PasswordHash;
+            }
+
+            _context.Users.Update(model);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Delete(int id)
+        {
+            var user = _context.Users.Find(id);
+            if (user != null)
+            {
+                _context.Users.Remove(user);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }

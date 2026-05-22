@@ -1,22 +1,78 @@
-﻿@model IEnumerable<CMS.Data.entities.Category>
+@model IEnumerable<CMS.Data.Entities.Category>
 
-<h2 class="text-primary">DANH SÁCH DANH MỤC (DỮ LIỆU MẪU)</h2>
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Tên danh mục</th>
-            <th>Mô tả</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Id</td>
-                <td>@item.Name</td>
-                <td>@item.Description</td>
-            </tr>
-        }
-    </tbody>
-</table>
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Quản Lý Danh Mục";
+}
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-primary">
+        <h2 class="mb-0 text-primary font-weight-bold text-uppercase">
+            <i class="bi bi-folder-fill me-2"></i>Quản Lý Danh Mục
+        </h2>
+        <a href="/Category/Create" class="btn btn-primary px-4 py-2 rounded-pill shadow-sm">
+            <i class="bi bi-plus-circle-fill me-2"></i>Thêm Danh Mục Mới
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center py-5 shadow-sm rounded-lg" role="alert">
+            <i class="bi bi-info-circle-fill fs-1 text-info mb-3 d-block"></i>
+            <h4 class="alert-heading">Chưa có danh mục nào!</h4>
+            <p class="mb-0 text-muted">Nhấn nút "Thêm Danh Mục Mới" phía trên để tạo danh mục đầu tiên.</p>
+        </div>
+    }
+    else
+    {
+        <div class="card border-0 shadow-sm rounded-lg overflow-hidden">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col" style="width: 10%;">ID</th>
+                            <th scope="col" style="width: 30%;">Tên Danh Mục</th>
+                            <th scope="col" style="width: 40%;">Mô Tả</th>
+                            <th scope="col" style="width: 20%;" class="text-center">Hành Động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <th scope="row">@item.Id</th>
+                                <td>
+                                    <a href="/Post/Index/@item.Id" class="text-decoration-none font-weight-bold text-dark hover-primary-link">
+                                        <i class="bi bi-folder2-open text-warning me-2"></i>@item.Name
+                                    </a>
+                                </td>
+                                <td class="text-muted">@item.Description</td>
+                                <td class="text-center">
+                                    <div class="btn-group" role="group">
+                                        <a href="/Category/Edit/@item.Id" class="btn btn-outline-warning btn-sm me-1 rounded">
+                                            <i class="bi bi-pencil-square me-1"></i>Sửa
+                                        </a>
+                                        <a href="/Category/Delete/@item.Id" class="btn btn-outline-danger btn-sm rounded" 
+                                           onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục &ldquo;@item.Name&rdquo; không?');">
+                                            <i class="bi bi-trash-fill me-1"></i>Xóa
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .hover-primary-link:hover {
+        color: #0d6efd !important;
+        text-decoration: underline !important;
+    }
+    .rounded-lg {
+        border-radius: 12px !important;
+    }
+</style>

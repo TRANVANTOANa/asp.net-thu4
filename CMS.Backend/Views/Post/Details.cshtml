@@ -1,66 +1,72 @@
-﻿@model CMS.Data.entities.Post
+@model CMS.Data.Entities.Post
+
+@{
+    ViewData["Title"] = Model.Title;
+}
 
 <div class="container mt-5">
-
-    <nav aria-label="breadcrumb">
-
-        <ol class="breadcrumb">
-
-            <li class="breadcrumb-item">
-                <a href="/Post">
-                    Danh sách bài viết
-                </a>
-            </li>
-
-            <li class="breadcrumb-item active">
-                Chi tiết bài viết
-            </li>
-
-        </ol>
-
-    </nav>
-
     <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a href="/Post">Bài viết</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">@Model.Title</li>
+                </ol>
+            </nav>
 
-        <div class="col-md-10">
+            <article class="bg-white p-5 rounded shadow-sm border border-light">
+                <!-- Category Badge -->
+                <div class="mb-3">
+                    <a href="/Post/Index/@Model.CategoryId" class="badge bg-info text-dark px-3 py-2 text-decoration-none fs-6">
+                        <i class="bi bi-tag-fill me-1"></i>@Model.Category?.Name
+                    </a>
+                </div>
 
-            <h1 class="display-5 fw-bold text-primary mb-3">
-                @Model.Title
-            </h1>
+                <!-- Title -->
+                <h1 class="display-5 text-primary font-weight-bold mb-3">@Model.Title</h1>
 
-            <p class="text-muted">
-                Đăng ngày:
-                @Model.CreatedDate.ToString("dd/MM/yyyy HH:mm")
-            </p>
+                <!-- Meta Metadata -->
+                <div class="d-flex align-items-center text-muted mb-4 pb-3 border-bottom">
+                    <span class="me-3">
+                        <i class="bi bi-calendar3 me-1"></i> Ngày đăng: @Model.CreatedDate.ToString("dd/MM/yyyy HH:mm")
+                    </span>
+                    <span>
+                        <i class="bi bi-person-fill me-1"></i> Tác giả: Quản trị viên
+                    </span>
+                </div>
 
-            <hr />
+                <!-- Featured Image -->
+                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                {
+                    <div class="mb-5 text-center">
+                        <img src="@Model.ImageUrl" class="img-fluid rounded shadow-sm" alt="@Model.Title" style="max-height: 480px; width: 100%; object-fit: cover;">
+                    </div>
+                }
 
-            <div class="mb-4 text-center">
+                <!-- Content -->
+                <div class="article-content fs-5 leading-relaxed text-dark-emphasis mb-5">
+                    @Html.Raw(Model.Content?.Replace("\n", "<br/>"))
+                </div>
 
-                <img src="@Model.ImageUrl"
-                     class="img-fluid rounded shadow"
-                     style="width:100%; max-height:500px; object-fit:cover;"
-                     alt="Post Image">
-
-            </div>
-
-            <div class="fs-5 lh-lg">
-
-                @Model.Content
-
-            </div>
-
-            <div class="mt-5">
-
-                <a href="/Post"
-                   class="btn btn-secondary">
-                    ← Quay lại danh sách
-                </a>
-
-            </div>
-
+                <!-- Back button -->
+                <div class="pt-4 border-top text-center">
+                    <a href="javascript:history.back()" class="btn btn-outline-secondary px-4 py-2 rounded-pill">
+                        <i class="bi bi-arrow-left me-1"></i> Quay lại trang trước
+                    </a>
+                    <a href="/Post/Index/@Model.CategoryId" class="btn btn-primary px-4 py-2 rounded-pill ms-2">
+                        <i class="bi bi-grid-fill me-1"></i> Xem cùng chuyên mục
+                    </a>
+                </div>
+            </article>
         </div>
-
     </div>
-
 </div>
+
+<style>
+    .article-content {
+        line-height: 1.8;
+        letter-spacing: 0.015em;
+        text-align: justify;
+    }
+</style>

@@ -12,19 +12,22 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 namespace CMS.Data.entities
 {
-
+    // Lớp quản lý danh mục sản phẩm
     public class CategoryProduct
     {
+        // Mã định danh danh mục sản phẩm (khóa chính)
         [Key]
         public int Id { get; set; }
 
+        // Tên danh mục sản phẩm (bắt buộc, tối đa 100 ký tự)
         [Required(ErrorMessage = "Tên danh mục không được để trống")]
         [StringLength(100)]
         public string Name { get; set; }
 
+        // Mô tả chi tiết về danh mục sản phẩm
         public string? Description { get; set; }
 
-        // Quan hệ: Một danh mục có nhiều sản phẩm
+        // Danh sách các sản phẩm thuộc danh mục này (quan hệ một-nhiều)
         public virtual ICollection<Product>? Products { get; set; }
     }
 }
