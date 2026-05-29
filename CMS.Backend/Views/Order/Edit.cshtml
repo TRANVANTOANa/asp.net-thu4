@@ -1,0 +1,107 @@
+@model CMS.Data.entities.Order
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Cập Nhật Đơn Hàng";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-9 col-lg-8">
+            <div class="card border-0 shadow-lg rounded-lg">
+                <div class="card-header bg-warning text-dark text-center py-4 rounded-top">
+                    <h3 class="card-title mb-0 text-uppercase font-weight-bold">
+                        <i class="bi bi-pencil-square me-2"></i>Cập Nhật Đơn Hàng #@Model.Id
+                    </h3>
+                    <p class="mb-0 mt-1" style="color:rgba(0,0,0,.6);">Thay đổi thông tin hoặc trạng thái đơn hàng</p>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" class="needs-validation">
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.Id)
+
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div class="alert alert-danger rounded mb-4">
+                                <i class="bi bi-exclamation-triangle me-2"></i><strong>Có lỗi:</strong>
+                                <ul class="mb-0 mt-2">
+                                    @foreach (var ms in ViewData.ModelState.Values)
+                                    {
+                                        @foreach (var err in ms.Errors)
+                                        {
+                                            <li>@err.ErrorMessage</li>
+                                        }
+                                    }
+                                </ul>
+                            </div>
+                        }
+
+                        <div class="row">
+                            <!-- Khách hàng -->
+                            <div class="col-md-6 mb-3">
+                                <label for="CustomerId" class="form-label font-weight-bold text-secondary">
+                                    Khách Hàng <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-secondary"><i class="bi bi-person"></i></span>
+                                    <select class="form-select" id="CustomerId" name="CustomerId" required>
+                                        <option value="">-- Chọn khách hàng --</option>
+                                        @if(ViewBag.CustomerList != null) {
+                                            @foreach (var customer in (IEnumerable<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>)ViewBag.CustomerList)
+                                            {
+                                                <option value="@customer.Value" selected="@(Model.CustomerId.ToString() == customer.Value)">@customer.Text</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Trạng thái -->
+                            <div class="col-md-6 mb-3">
+                                <label for="Status" class="form-label font-weight-bold text-secondary">
+                                    Trạng Thái <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-secondary"><i class="bi bi-ui-radios"></i></span>
+                                    <select class="form-select" id="Status" name="Status" required>
+                                        <option value="">-- Chọn trạng thái --</option>
+                                        @if(ViewBag.StatusList != null) {
+                                            @foreach (var status in (IEnumerable<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>)ViewBag.StatusList)
+                                            {
+                                                <option value="@status.Value" selected="@(Model.Status.ToString() == status.Value)">@status.Text</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ghi chú -->
+                        <div class="mb-4">
+                            <label for="Notes" class="form-label font-weight-bold text-secondary">Ghi Chú</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-secondary"><i class="bi bi-card-text"></i></span>
+                                <textarea class="form-control" id="Notes" name="Notes" rows="3">@Model.Notes</textarea>
+                            </div>
+                        </div>
+
+                        <!-- Hành động -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="@Url.Action("Index", "Order")" class="btn btn-outline-secondary px-4 py-2 rounded-pill">
+                                <i class="bi bi-arrow-left me-1"></i> Quay lại
+                            </a>
+                            <button type="submit" class="btn btn-warning text-dark px-4 py-2 rounded-pill shadow-sm font-weight-bold">
+                                <i class="bi bi-save-fill me-1"></i> Cập nhật thay đổi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .rounded-lg  { border-radius: 16px !important; }
+    .rounded-top { border-top-left-radius: 16px !important; border-top-right-radius: 16px !important; }
+</style>

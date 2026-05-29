@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CMS.Data;
@@ -10,6 +11,7 @@ using System.Linq;
 
 namespace CMS.Backend.Controllers
 {
+    [Authorize] // Bắt buộc phải đăng nhập mới được vào
     public class PostController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -66,6 +68,11 @@ namespace CMS.Backend.Controllers
                 }
 
                 model.ImageUrl = "/uploads/" + fileName;
+            }
+
+            if (string.IsNullOrWhiteSpace(model.ImageUrl))
+            {
+                model.ImageUrl = string.Empty;
             }
 
             if (model.CreatedDate == default)

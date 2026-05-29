@@ -1,72 +1,116 @@
 @model CMS.Data.Entities.Post
 
 @{
-    ViewData["Title"] = Model.Title;
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Xem Chi Tiết Bài Viết";
 }
 
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-lg-9">
-            <nav aria-label="breadcrumb" class="mb-4">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
-                    <li class="breadcrumb-item"><a href="/Post">Bài viết</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">@Model.Title</li>
-                </ol>
-            </nav>
-
-            <article class="bg-white p-5 rounded shadow-sm border border-light">
-                <!-- Category Badge -->
-                <div class="mb-3">
-                    <a href="/Post/Index/@Model.CategoryId" class="badge bg-info text-dark px-3 py-2 text-decoration-none fs-6">
-                        <i class="bi bi-tag-fill me-1"></i>@Model.Category?.Name
+        <div class="col-lg-10">
+            <!-- Header Actions -->
+            <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-light">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index" class="text-decoration-none">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a asp-controller="Post" asp-action="Index" class="text-decoration-none">Bài viết</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Chi tiết</li>
+                    </ol>
+                </nav>
+                <div class="d-flex gap-2">
+                    <a asp-controller="Post" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning px-4 rounded-pill shadow-sm">
+                        <i class="bi bi-pencil-square me-1"></i> Chỉnh sửa
+                    </a>
+                    <a asp-controller="Post" asp-action="Index" class="btn btn-outline-secondary px-4 rounded-pill">
+                        <i class="bi bi-arrow-left me-1"></i> Quay lại
                     </a>
                 </div>
+            </div>
 
-                <!-- Title -->
-                <h1 class="display-5 text-primary font-weight-bold mb-3">@Model.Title</h1>
-
-                <!-- Meta Metadata -->
-                <div class="d-flex align-items-center text-muted mb-4 pb-3 border-bottom">
-                    <span class="me-3">
-                        <i class="bi bi-calendar3 me-1"></i> Ngày đăng: @Model.CreatedDate.ToString("dd/MM/yyyy HH:mm")
-                    </span>
-                    <span>
-                        <i class="bi bi-person-fill me-1"></i> Tác giả: Quản trị viên
-                    </span>
-                </div>
-
-                <!-- Featured Image -->
+            <!-- Main Content Card -->
+            <div class="card border-0 shadow-lg rounded-lg overflow-hidden">
+                <!-- Cover Image -->
                 @if (!string.IsNullOrEmpty(Model.ImageUrl))
                 {
-                    <div class="mb-5 text-center">
-                        <img src="@Model.ImageUrl" class="img-fluid rounded shadow-sm" alt="@Model.Title" style="max-height: 480px; width: 100%; object-fit: cover;">
+                    <div class="post-cover position-relative">
+                        <img src="@Model.ImageUrl" class="img-fluid w-100" style="height: 450px; object-fit: cover;" alt="@Model.Title">
+                        <div class="position-absolute bottom-0 start-0 w-100 p-5 bg-gradient-dark text-white">
+                            <span class="badge bg-primary px-3 py-2 rounded-pill shadow-sm mb-3">
+                                <i class="bi bi-folder2-open me-1"></i> @Model.Category?.Name
+                            </span>
+                            <h1 class="display-5 fw-bold mb-0">@Model.Title</h1>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="card-header bg-primary text-white p-5">
+                        <span class="badge bg-white text-primary px-3 py-2 rounded-pill shadow-sm mb-3">
+                            <i class="bi bi-folder2-open me-1"></i> @Model.Category?.Name
+                        </span>
+                        <h1 class="display-5 fw-bold mb-0">@Model.Title</h1>
                     </div>
                 }
 
-                <!-- Content -->
-                <div class="article-content fs-5 leading-relaxed text-dark-emphasis mb-5">
-                    @Html.Raw(Model.Content?.Replace("\n", "<br/>"))
-                </div>
+                <div class="card-body p-4 p-md-5">
+                    <!-- Post Meta Info -->
+                    <div class="d-flex flex-wrap align-items-center text-muted small mb-5 border-bottom pb-4 border-light gap-4">
+                        <span><i class="bi bi-calendar3 me-1"></i> Ngày đăng: <strong>@Model.CreatedDate.ToString("dd/MM/yyyy HH:mm")</strong></span>
+                        <span><i class="bi bi-person-circle me-1"></i> Tác giả: <strong>Admin ThaiCMS</strong></span>
+                        <span><i class="bi bi-hash me-1"></i> ID: <strong>@Model.Id</strong></span>
+                    </div>
 
-                <!-- Back button -->
-                <div class="pt-4 border-top text-center">
-                    <a href="javascript:history.back()" class="btn btn-outline-secondary px-4 py-2 rounded-pill">
-                        <i class="bi bi-arrow-left me-1"></i> Quay lại trang trước
-                    </a>
-                    <a href="/Post/Index/@Model.CategoryId" class="btn btn-primary px-4 py-2 rounded-pill ms-2">
-                        <i class="bi bi-grid-fill me-1"></i> Xem cùng chuyên mục
-                    </a>
+                    <!-- Article Content -->
+                    <div class="article-body">
+                        @if (!string.IsNullOrEmpty(Model.Content))
+                        {
+                            <div class="post-content-container">
+                                @Html.Raw(Model.Content.Replace("\n", "<br/>"))
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-light text-center py-5 border">
+                                <i class="bi bi-chat-dots fs-3 text-muted d-block mb-3"></i>
+                                <span class="text-muted fst-italic">Bài viết này chưa có nội dung chi tiết.</span>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Footer Actions -->
+                    <div class="mt-5 pt-5 border-top border-light d-flex justify-content-center gap-3">
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning btn-lg px-5 rounded-pill shadow-sm font-weight-bold">
+                            <i class="bi bi-pencil-fill me-2"></i>Chỉnh Sửa Bài Viết
+                        </a>
+                        <a href="javascript:history.back()" class="btn btn-outline-secondary btn-lg px-5 rounded-pill">
+                            <i class="bi bi-arrow-left me-2"></i>Quay Lại
+                        </a>
+                    </div>
                 </div>
-            </article>
+            </div>
         </div>
     </div>
 </div>
 
 <style>
-    .article-content {
-        line-height: 1.8;
-        letter-spacing: 0.015em;
+    .rounded-lg { border-radius: 1.5rem !important; }
+    
+    .bg-gradient-dark {
+        background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.85) 100%);
+    }
+    
+    .article-body {
+        font-size: 1.15rem;
+        line-height: 1.85;
+        color: #2d3436;
+    }
+    
+    .post-content-container {
         text-align: justify;
+        letter-spacing: 0.01em;
+    }
+    
+    .breadcrumb-item + .breadcrumb-item::before {
+        color: #ced4da;
     }
 </style>

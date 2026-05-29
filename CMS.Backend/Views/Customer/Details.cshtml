@@ -1,0 +1,123 @@
+@model CMS.Data.entities.Customer
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Hồ Sơ Khách Hàng";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Cột trái: Thông tin cá nhân -->
+        <div class="col-lg-4 mb-4">
+            <div class="card border-0 shadow-lg rounded-lg text-center overflow-hidden">
+                <div class="card-header bg-primary text-white p-5 border-0">
+                    <div class="avatar-circle mx-auto mb-3 bg-white text-primary d-flex align-items-center justify-content-center shadow-sm">
+                        <i class="bi bi-person-fill display-4"></i>
+                    </div>
+                    <h3 class="fw-bold mb-1">@Model.FullName</h3>
+                    <p class="text-white-50 small mb-0">ID Khách hàng: #@Model.Id</p>
+                </div>
+                <div class="card-body p-4">
+                    <div class="text-start">
+                        <div class="mb-3">
+                            <label class="text-secondary small text-uppercase fw-bold d-block">Email</label>
+                            <a href="mailto:@Model.Email" class="text-dark text-decoration-none fw-bold">@Model.Email</a>
+                        </div>
+                        <div class="mb-3">
+                            <label class="text-secondary small text-uppercase fw-bold d-block">Số điện thoại</label>
+                            <a href="tel:@Model.Phone" class="text-dark text-decoration-none fw-bold">@(string.IsNullOrEmpty(Model.Phone) ? "Chưa cập nhật" : Model.Phone)</a>
+                        </div>
+                        <div class="mb-4">
+                            <label class="text-secondary small text-uppercase fw-bold d-block">Địa chỉ</label>
+                            <span class="text-dark fw-600">@(string.IsNullOrEmpty(Model.Address) ? "Chưa cập nhật" : Model.Address)</span>
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <a href="@Url.Action("Edit", "Customer", new { id = Model.Id })" class="btn btn-warning rounded-pill shadow-sm font-weight-bold">
+                            <i class="bi bi-pencil-square me-2"></i>Sửa Thông Tin
+                        </a>
+                        <a href="@Url.Action("Index", "Customer")" class="btn btn-outline-secondary rounded-pill">
+                            <i class="bi bi-arrow-left me-2"></i>Quay Lại
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cột phải: Lịch sử đơn hàng -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg rounded-lg h-100 overflow-hidden">
+                <div class="card-header bg-white p-4">
+                    <h5 class="mb-0 fw-bold text-primary"><i class="bi bi-clock-history me-2"></i>Lịch Sử Đơn Hàng</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr class="text-secondary small text-uppercase">
+                                    <th class="ps-4">Mã Đơn</th>
+                                    <th>Ngày Đặt</th>
+                                    <th>Trạng Thái</th>
+                                    <th class="text-center">Số Lượng SP</th>
+                                    <th class="text-end pe-4">Hành Động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Orders != null && Model.Orders.Any())
+                                {
+                                    @foreach (var order in Model.Orders)
+                                    {
+                                        string statusClass = order.Status switch
+                                        {
+                                            0 => "bg-secondary",
+                                            1 => "bg-warning text-dark",
+                                            2 => "bg-success",
+                                            _ => "bg-secondary"
+                                        };
+                                        string statusText = order.Status switch
+                                        {
+                                            0 => "Chờ duyệt",
+                                            1 => "Đang giao",
+                                            2 => "Đã xong",
+                                            _ => "Không xác định"
+                                        };
+                                        <tr>
+                                            <td class="ps-4 fw-bold">#@order.Id</td>
+                                            <td>@order.OrderDate.ToString("dd/MM/yyyy")</td>
+                                            <td><span class="badge @statusClass rounded-pill px-3">@statusText</span></td>
+                                            <td class="text-center">@(order.OrderDetails?.Count ?? 0)</td>
+                                            <td class="text-end pe-4">
+                                                <a href="@Url.Action("Details", "Order", new { id = order.Id })" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                                    Chi tiết <i class="bi bi-chevron-right ms-1"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="5" class="text-center py-5">
+                                            <i class="bi bi-receipt fs-1 text-muted d-block mb-2"></i>
+                                            <p class="text-muted mb-0">Khách hàng này chưa có đơn hàng nào.</p>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .rounded-lg { border-radius: 1.25rem !important; }
+    .avatar-circle {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+    }
+    .fw-600 { font-weight: 600; }
+</style>

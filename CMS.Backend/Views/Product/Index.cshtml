@@ -1,0 +1,111 @@
+@model List<CMS.Data.entities.Product>
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Quản Lý Sản Phẩm";
+}
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-primary">
+        <h2 class="mb-0 text-primary font-weight-bold text-uppercase">
+            <i class="bi bi-box-seam-fill me-2"></i>Quản Lý Sản Phẩm
+        </h2>
+        <a href="@Url.Action("Create", "Product")" class="btn btn-primary px-4 py-2 rounded-pill shadow-sm">
+            <i class="bi bi-plus-circle-fill me-2"></i>Thêm Sản Phẩm Mới
+        </a>
+    </div>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm rounded" role="alert">
+            <i class="bi bi-exclamation-circle me-2"></i>@TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (Model.Count == 0)
+    {
+        <div class="alert alert-info text-center py-5 shadow-sm rounded-lg" role="alert">
+            <i class="bi bi-info-circle-fill fs-1 text-info mb-3 d-block"></i>
+            <h4 class="alert-heading">Chưa có sản phẩm nào!</h4>
+            <p class="mb-0 text-muted">Nhấn nút "Thêm Sản Phẩm Mới" phía trên để tạo sản phẩm đầu tiên.</p>
+        </div>
+    }
+    else
+    {
+        <div class="card border-0 shadow-sm rounded-lg overflow-hidden">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col" style="width:6%;">ID</th>
+                            <th scope="col" style="width:8%;">Ảnh</th>
+                            <th scope="col" style="width:24%;">Tên Sản Phẩm</th>
+                            <th scope="col" style="width:18%;">Danh Mục</th>
+                            <th scope="col" style="width:14%;" class="text-end">Giá</th>
+                            <th scope="col" style="width:10%;" class="text-center">Kho</th>
+                            <th scope="col" style="width:20%;" class="text-center">Hành Động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var product in Model)
+                        {
+                            <tr>
+                                <th scope="row">@product.Id</th>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(product.ImageUrl))
+                                    {
+                                        <img src="@product.ImageUrl" alt="@product.Name"
+                                             style="width:48px;height:48px;object-fit:cover;border-radius:8px;border:1px solid #dee2e6;" />
+                                    }
+                                    else
+                                    {
+                                        <div style="width:48px;height:48px;background:#f1f3f5;border-radius:8px;display:flex;align-items:center;justify-content:center;">
+                                            <i class="bi bi-image text-muted"></i>
+                                        </div>
+                                    }
+                                </td>
+                                <td>
+                                    <i class="bi bi-box-seam text-primary me-2"></i>
+                                    <strong>@product.Name</strong>
+                                </td>
+                                <td class="text-muted">
+                                    <i class="bi bi-tag me-1"></i>@product.CategoryProduct?.Name
+                                </td>
+                                <td class="text-end fw-bold text-success">
+                                    @product.Price.ToString("N0") ₫
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge rounded-pill px-3 py-2 @(product.StockQuantity > 10 ? "bg-success" : "bg-warning text-dark")">
+                                        @product.StockQuantity
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group" role="group">
+                                        <a href="@Url.Action("Details", "Product", new { id = product.Id })"
+                                           class="btn btn-outline-info btn-sm rounded me-1" title="Chi tiết">
+                                            <i class="bi bi-eye me-1"></i>Chi tiết
+                                        </a>
+                                        <a href="@Url.Action("Edit", "Product", new { id = product.Id })"
+                                           class="btn btn-outline-warning btn-sm rounded me-1">
+                                            <i class="bi bi-pencil-square me-1"></i>Sửa
+                                        </a>
+                                        <a href="@Url.Action("Delete", "Product", new { id = product.Id })"
+                                           class="btn btn-outline-danger btn-sm rounded"
+                                           onclick="return confirm('Bạn có chắc muốn xóa sản phẩm &ldquo;@product.Name&rdquo; không?')">
+                                            <i class="bi bi-trash-fill me-1"></i>Xóa
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .rounded-lg { border-radius: 12px !important; }
+</style>

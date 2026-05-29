@@ -10,9 +10,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace CMS.Data.entities
 {
     // Lớp quản lý danh mục sản phẩm
+    [Table("CategoriesProducts")]
     public class CategoryProduct
     {
         // Mã định danh danh mục sản phẩm (khóa chính)

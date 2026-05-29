@@ -1,0 +1,135 @@
+@model CMS.Data.entities.Product
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Thêm Sản Phẩm Mới";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-9 col-lg-8">
+            <div class="card border-0 shadow-lg rounded-lg">
+                <div class="card-header bg-primary text-white text-center py-4 rounded-top">
+                    <h3 class="card-title mb-0 text-uppercase font-weight-bold">
+                        <i class="bi bi-box-seam me-2"></i>Thêm Sản Phẩm Mới
+                    </h3>
+                    <p class="mb-0 text-white-50 mt-1">Điền thông tin bên dưới để tạo sản phẩm mới</p>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div class="alert alert-danger rounded mb-4">
+                                <i class="bi bi-exclamation-triangle me-2"></i><strong>Có lỗi trong quá trình lưu:</strong>
+                                <ul class="mb-0 mt-2">
+                                    @foreach (var ms in ViewData.ModelState.Values)
+                                    {
+                                        @foreach (var err in ms.Errors)
+                                        {
+                                            <li>@err.ErrorMessage</li>
+                                        }
+                                    }
+                                </ul>
+                            </div>
+                        }
+
+                        <!-- Tên sản phẩm -->
+                        <div class="mb-3">
+                            <label for="Name" class="form-label font-weight-bold text-secondary">
+                                Tên Sản Phẩm <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-secondary"><i class="bi bi-box-seam"></i></span>
+                                <input type="text" class="form-control" id="Name" name="Name"
+                                       value="@Model?.Name" placeholder="Ví dụ: Áo thun nam cổ tròn" required />
+                            </div>
+                        </div>
+
+                        <!-- Mô tả -->
+                        <div class="mb-3">
+                            <label for="Description" class="form-label font-weight-bold text-secondary">Mô Tả Sản Phẩm</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-secondary"><i class="bi bi-chat-left-text"></i></span>
+                                <textarea class="form-control" id="Description" name="Description"
+                                          rows="3" placeholder="Nhập mô tả chi tiết về sản phẩm...">@Model?.Description</textarea>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Giá -->
+                            <div class="col-md-6 mb-3">
+                                <label for="Price" class="form-label font-weight-bold text-secondary">
+                                    Giá (VNĐ) <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-secondary"><i class="bi bi-currency-exchange"></i></span>
+                                    <input type="number" class="form-control" id="Price" name="Price"
+                                           value="@Model?.Price" step="1000" min="0" placeholder="0" required />
+                                </div>
+                            </div>
+
+                            <!-- Số lượng kho -->
+                            <div class="col-md-6 mb-3">
+                                <label for="StockQuantity" class="form-label font-weight-bold text-secondary">
+                                    Số Lượng Kho <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-secondary"><i class="bi bi-boxes"></i></span>
+                                    <input type="number" class="form-control" id="StockQuantity" name="StockQuantity"
+                                           value="@Model?.StockQuantity" min="0" placeholder="0" required />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Danh mục -->
+                        <div class="mb-3">
+                            <label for="CategoryProductId" class="form-label font-weight-bold text-secondary">
+                                Danh Mục Sản Phẩm <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-secondary"><i class="bi bi-tags"></i></span>
+                                <select class="form-select" id="CategoryProductId" name="CategoryProductId" required>
+                                    <option value="">-- Chọn danh mục --</option>
+                                    @foreach (var category in ViewBag.CategoryList)
+                                    {
+                                        <option value="@category.Value"
+                                                selected="@(Model?.CategoryProductId.ToString() == category.Value)">
+                                            @category.Text
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Hình ảnh -->
+                        <div class="mb-4">
+                            <label for="uploadImage" class="form-label font-weight-bold text-secondary">Hình Ảnh Sản Phẩm</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-secondary"><i class="bi bi-image"></i></span>
+                                <input type="file" class="form-control" id="uploadImage" name="uploadImage" accept="image/*" />
+                            </div>
+                            <small class="text-muted">Chấp nhận JPG, PNG, GIF. Để trống nếu không có ảnh.</small>
+                        </div>
+
+                        <!-- Hành động -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="@Url.Action("Index", "Product")" class="btn btn-outline-secondary px-4 py-2 rounded-pill">
+                                <i class="bi bi-arrow-left me-1"></i> Quay lại
+                            </a>
+                            <button type="submit" class="btn btn-primary px-4 py-2 rounded-pill shadow-sm">
+                                <i class="bi bi-check-circle-fill me-1"></i> Lưu sản phẩm
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .rounded-lg  { border-radius: 16px !important; }
+    .rounded-top { border-top-left-radius: 16px !important; border-top-right-radius: 16px !important; }
+</style>

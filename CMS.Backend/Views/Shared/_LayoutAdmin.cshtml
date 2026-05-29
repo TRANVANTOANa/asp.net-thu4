@@ -1,79 +1,267 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ThaiCMS Admin</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <style>
+        * { font-family: 'Inter', sans-serif; }
+
         body {
             min-height: 100vh;
-            background-color: #f1f3f5;
+            background-color: #f0f2f5;
         }
+
+        /* ===== SIDEBAR ===== */
         .sidebar {
             min-height: 100vh;
-            background-color: #212529;
+            width: 240px;
+            background: linear-gradient(180deg, #1a1d2e 0%, #16182a 100%);
             color: white;
+            position: fixed;
+            top: 0; left: 0;
+            overflow-y: auto;
+            z-index: 100;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.3);
         }
-        .sidebar a {
-            color: #adb5bd;
-            text-decoration: none;
-            display: block;
-            padding: 14px 20px;
+
+        .sidebar-brand {
+            padding: 22px 20px;
+            border-bottom: 1px solid rgba(255,255,255,.07);
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
-        .sidebar a:hover,
-        .sidebar a.active {
-            background-color: #0d6efd;
-            color: white;
+
+        .sidebar-brand .brand-icon {
+            width: 38px; height: 38px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
         }
-        .sidebar .brand {
-            padding: 24px 20px;
-            border-bottom: 1px solid rgba(255,255,255,.08);
+
+        .sidebar-brand h5 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.2;
         }
+
+        .sidebar-brand small {
+            color: rgba(255,255,255,.4);
+            font-size: 0.7rem;
+        }
+
         .sidebar .section-title {
-            padding: 16px 20px 6px;
-            font-size: 0.85rem;
+            padding: 20px 20px 6px;
+            font-size: 0.7rem;
             text-transform: uppercase;
-            letter-spacing: .08em;
-            color: #6c757d;
+            letter-spacing: .12em;
+            color: rgba(255,255,255,.3);
+            font-weight: 600;
         }
+
+        .sidebar a {
+            color: rgba(255,255,255,.6);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar a i {
+            font-size: 1rem;
+            width: 18px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .sidebar a:hover {
+            background-color: rgba(255,255,255,.06);
+            color: #fff;
+            border-left-color: rgba(102,126,234,.5);
+        }
+
+        .sidebar a.active {
+            background: linear-gradient(90deg, rgba(102,126,234,.2), transparent);
+            color: #fff;
+            border-left-color: #667eea;
+        }
+
+        .sidebar a.active i { color: #667eea; }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            margin-left: 240px;
+            min-height: 100vh;
+        }
+
+        /* ===== HEADER ===== */
         .admin-header {
-            background-color: white;
-            border-bottom: 1px solid #dee2e6;
+            background: #fff;
+            border-bottom: 1px solid #e9ecef;
+            padding: 14px 28px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: 0 2px 8px rgba(0,0,0,.06);
         }
+
+        .admin-header h1 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #212529;
+            margin: 0;
+        }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 50px;
+            padding: 6px 14px 6px 8px;
+            font-size: 0.85rem;
+            color: #495057;
+        }
+
+        .user-badge .avatar {
+            width: 30px; height: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: white;
+            font-size: 0.78rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* ===== PAGE BODY ===== */
+        .page-body {
+            padding: 28px;
+        }
+
+        /* ===== ROLE BADGE ===== */
+        .badge-admin   { background: linear-gradient(135deg,#667eea,#764ba2); color:#fff; }
+        .badge-editor  { background: linear-gradient(135deg,#11998e,#38ef7d); color:#fff; }
     </style>
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row g-0">
-            <nav class="col-md-3 col-lg-2 sidebar p-0 shadow-sm">
-                <div class="brand text-center text-white bg-dark">
-                    <h4 class="mb-0">ThaiCMS Admin</h4>
-                </div>
-                <div class="section-title">Quản lý</div>
-                <a asp-controller="Home" asp-action="Index"><i class="bi bi-speedometer2 me-2"></i>Bảng điều khiển</a>
-                <a asp-controller="Category" asp-action="Index"><i class="bi bi-grid me-2"></i>Quản lý Danh mục</a>
-                <a asp-controller="Post" asp-action="Index"><i class="bi bi-file-earmark-post me-2"></i>Quản lý Bài viết</a>
-                <a asp-controller="User" asp-action="Index"><i class="bi bi-people me-2"></i>Quản lý Thành viên</a>
-            </nav>
-            <main class="col-md-9 col-lg-10 ms-sm-auto p-4">
-                <header class="admin-header py-3 mb-4">
-                    <div class="d-flex justify-content-between align-items-center">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon">
+                <i class="bi bi-lightning-charge-fill text-white"></i>
+            </div>
+            <div>
+                <h5>ThaiCMS</h5>
+                <small>Admin Panel</small>
+            </div>
+        </div>
+
+        <div class="section-title">Tổng quan</div>
+        <a asp-controller="Home" asp-action="Index">
+            <i class="bi bi-speedometer2"></i> Bảng điều khiển
+        </a>
+
+        <div class="section-title">Nội dung</div>
+        <a asp-controller="Category" asp-action="Index">
+            <i class="bi bi-folder2-open"></i> Quản lý Danh mục
+        </a>
+        <a asp-controller="Post" asp-action="Index">
+            <i class="bi bi-file-earmark-richtext"></i> Quản lý Bài viết
+        </a>
+
+        <div class="section-title">Thương mại</div>
+        <a asp-controller="CategoryProduct" asp-action="Index">
+            <i class="bi bi-tags"></i> Danh mục Sản phẩm
+        </a>
+        <a asp-controller="Product" asp-action="Index">
+            <i class="bi bi-box-seam"></i> Quản lý Sản phẩm
+        </a>
+        <a asp-controller="Order" asp-action="Index">
+            <i class="bi bi-cart-check"></i> Quản lý Đơn hàng
+        </a>
+        <a asp-controller="Customer" asp-action="Index">
+            <i class="bi bi-person-heart"></i> Quản lý Khách hàng
+        </a>
+
+        @if (User.IsInRole("Admin") || User.IsInRole("Administrator"))
+        {
+            <div class="section-title">Hệ thống</div>
+            <a asp-controller="User" asp-action="Index">
+                <i class="bi bi-shield-lock"></i> Quản lý Thành viên
+            </a>
+        }
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <!-- HEADER -->
+        <header class="admin-header d-flex justify-content-between align-items-center">
+            <h1><i class="bi bi-chevron-right text-primary me-1" style="font-size:.9rem;"></i>@ViewData["Title"]</h1>
+
+            <div class="d-flex align-items-center gap-2">
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    var role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value ?? "";
+                    var fullName = User.FindFirst("FullName")?.Value ?? User.Identity.Name;
+                    var initials = fullName?.Length > 0 ? fullName.Substring(0,1).ToUpper() : "?";
+
+                    <div class="user-badge">
+                        <div class="avatar">@initials</div>
                         <div>
-                            <h1 class="h4 mb-0">@ViewData["Title"]</h1>
+                            <div class="fw-600" style="font-weight:600; line-height:1.2;">@fullName</div>
                         </div>
-                        <div class="text-muted small">
-                            <i class="bi bi-person-circle me-1"></i>Admin
-                        </div>
+                        <span class="badge rounded-pill @(role == "Admin" || role == "Administrator" ? "badge-admin" : "badge-editor") ms-1">
+                            @role
+                        </span>
                     </div>
-                </header>
-                @RenderBody()
-            </main>
+
+                    <a class="btn btn-outline-danger btn-sm"
+                       asp-controller="Account" asp-action="Logout">
+                        <i class="bi bi-box-arrow-right me-1"></i>Đăng xuất
+                    </a>
+                }
+            </div>
+        </header>
+
+        <!-- PAGE BODY -->
+        <div class="page-body">
+            @RenderBody()
         </div>
     </div>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Auto highlight active sidebar link -->
+    <script>
+        (function () {
+            var path = window.location.pathname.toLowerCase();
+            document.querySelectorAll('.sidebar a').forEach(function (a) {
+                var href = a.getAttribute('href');
+                if (href && path.startsWith(href.toLowerCase()) && href !== '/') {
+                    a.classList.add('active');
+                }
+            });
+        })();
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

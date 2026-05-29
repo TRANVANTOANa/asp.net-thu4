@@ -54,12 +54,44 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-white-50 hover-white px-3" asp-area="" asp-controller="Category" asp-action="Index">
-                                <i class="bi bi-folder-fill me-1"></i> Quản lý danh mục
+                                <i class="bi bi-folder-fill me-1"></i> Danh mục
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-white-50 hover-white px-3" asp-area="" asp-controller="Post" asp-action="Index">
                                 <i class="bi bi-journal-text me-1"></i> Bài viết
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-white-50 hover-white px-3 dropdown-toggle" href="#" id="productDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-box-seam me-1"></i> Sản phẩm
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="productDropdown">
+                                <li>
+                                    <a class="dropdown-item" asp-area="" asp-controller="Product" asp-action="Index">
+                                        <i class="bi bi-box me-1"></i> Danh sách sản phẩm
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-area="" asp-controller="CategoryProduct" asp-action="Index">
+                                        <i class="bi bi-tag me-1"></i> Danh mục sản phẩm
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white-50 hover-white px-3" asp-area="" asp-controller="Customer" asp-action="Index">
+                                <i class="bi bi-people-fill me-1"></i> Khách hàng
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white-50 hover-white px-3" asp-area="" asp-controller="Order" asp-action="Index">
+                                <i class="bi bi-bag-check-fill me-1"></i> Đơn hàng
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white-50 hover-white px-3" asp-area="" asp-controller="User" asp-action="Index">
+                                <i class="bi bi-shield-lock me-1"></i> Người dùng
                             </a>
                         </li>
                     </ul>

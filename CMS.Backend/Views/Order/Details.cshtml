@@ -1,0 +1,165 @@
+@model CMS.Data.entities.Order
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Chi Tiết Đơn Hàng";
+    
+    string statusBadge = Model.Status switch
+    {
+        0 => "bg-secondary",
+        1 => "bg-warning text-dark",
+        2 => "bg-success",
+        _ => "bg-secondary"
+    };
+    string statusText = Model.Status switch
+    {
+        0 => "Chờ duyệt",
+        1 => "Đang giao",
+        2 => "Đã xong",
+        _ => "Không xác định"
+    };
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Cột trái: Thông tin tổng quan đơn hàng -->
+        <div class="col-lg-4 mb-4">
+            <div class="card border-0 shadow-lg rounded-lg mb-4">
+                <div class="card-header bg-dark text-white p-4 rounded-top">
+                    <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Thông Tin Đơn Hàng</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="mb-3 d-flex justify-content-between align-items-center pb-2 border-bottom border-light">
+                        <span class="text-secondary fw-bold small text-uppercase">Mã đơn hàng:</span>
+                        <span class="fw-bold">#@Model.Id</span>
+                    </div>
+                    <div class="mb-3 d-flex justify-content-between align-items-center pb-2 border-bottom border-light">
+                        <span class="text-secondary fw-bold small text-uppercase">Ngày đặt:</span>
+                        <span>@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</span>
+                    </div>
+                    <div class="mb-3 d-flex justify-content-between align-items-center pb-2 border-bottom border-light">
+                        <span class="text-secondary fw-bold small text-uppercase">Trạng thái:</span>
+                        <span class="badge @statusBadge px-3 py-2 rounded-pill">@statusText</span>
+                    </div>
+                    <div class="mb-0 pt-2">
+                        <span class="text-secondary fw-bold small text-uppercase d-block mb-1">Ghi chú:</span>
+                        <p class="text-muted small italic">@(string.IsNullOrEmpty(Model.Notes) ? "Không có ghi chú" : Model.Notes)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Khách hàng -->
+            <div class="card border-0 shadow-lg rounded-lg">
+                <div class="card-header bg-primary text-white p-4 rounded-top-lg">
+                    <h5 class="mb-0"><i class="bi bi-person-badge me-2"></i>Khách Hàng</h5>
+                </div>
+                <div class="card-body p-4 text-center">
+                    <div class="bg-light p-3 rounded-circle d-inline-flex mb-3">
+                        <i class="bi bi-person fw-bold fs-2 text-primary"></i>
+                    </div>
+                    <h5 class="fw-bold mb-1">@Model.Customer?.FullName</h5>
+                    <p class="text-muted small mb-3">@Model.Customer?.Email</p>
+                    <div class="d-grid">
+                         <a href="tel:@Model.Customer?.Phone" class="btn btn-outline-primary btn-sm rounded-pill">
+                             <i class="bi bi-telephone me-1"></i> Gọi ngay: @Model.Customer?.Phone
+                         </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cột phải: Danh sách sản phẩm chi tiết -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg rounded-lg overflow-hidden h-100">
+                <div class="card-header bg-white p-4 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold text-primary"><i class="bi bi-cart3 me-2"></i>Sản Phẩm Đã Đặt</h5>
+                    <a href="@Url.Action("Create", "OrderDetail", new { orderId = Model.Id })" class="btn btn-primary btn-sm px-3 rounded-pill">
+                        <i class="bi bi-plus-circle me-1"></i> Thêm Sản Phẩm
+                    </a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr class="text-secondary small text-uppercase">
+                                    <th class="ps-4">Sản Phẩm</th>
+                                    <th class="text-center">SL</th>
+                                    <th class="text-end">Đơn Giá</th>
+                                    <th class="text-end pe-4">Thành Tiền</th>
+                                    <th class="text-center"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{ decimal totalAmount = 0; }
+                                @if (Model.OrderDetails != null && Model.OrderDetails.Any())
+                                {
+                                    @foreach (var detail in Model.OrderDetails)
+                                    {
+                                        <tr>
+                                            <td class="ps-4 py-3">
+                                                <div class="fw-bold">@detail.Product?.Name</div>
+                                                <div class="text-muted small">Mã SP: #@detail.ProductId</div>
+                                            </td>
+                                            <td class="text-center fw-bold">@detail.Quantity</td>
+                                            <td class="text-end">@detail.UnitPrice.ToString("N0") ₫</td>
+                                            <td class="text-end pe-4 fw-bold text-success">@((detail.Quantity * detail.UnitPrice).ToString("N0")) ₫</td>
+                                            <td class="pe-4 text-center">
+                                                <div class="btn-group">
+                                                    <a href="@Url.Action("Edit", "OrderDetail", new { id = detail.Id })" class="btn btn-sm btn-outline-warning rounded me-1 border-0">
+                                                        <i class="bi bi-pencil"></i>
+                                                    </a>
+                                                    <a href="@Url.Action("Delete", "OrderDetail", new { id = detail.Id })" class="btn btn-sm btn-outline-danger rounded border-0" onclick="return confirm('Xóa sản phẩm này?')">
+                                                        <i class="bi bi-trash"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        totalAmount += (detail.Quantity * detail.UnitPrice);
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="5" class="text-center py-5">
+                                            <i class="bi bi-cart-x fs-1 text-muted d-block mb-2"></i>
+                                            <span class="text-muted">Chưa có sản phẩm nào</span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot class="bg-light">
+                                <tr>
+                                    <td colspan="3" class="text-end py-4 fw-bold lead">TỔNG CỘNG:</td>
+                                    <td class="text-end pe-4 py-4 fw-bold lead text-danger">@totalAmount.ToString("N0") ₫</td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <!-- Card Footer Actions -->
+                <div class="card-footer bg-white p-4 border-top">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="@Url.Action("Index", "Order")" class="btn btn-outline-secondary px-4 py-2 rounded-pill shadow-sm">
+                            <i class="bi bi-arrow-left me-1"></i> Quay Lại
+                        </a>
+                        <div class="d-flex gap-2">
+                             <a href="@Url.Action("Edit", "Order", new { id = Model.Id })" class="btn btn-warning px-4 py-2 rounded-pill shadow-sm font-weight-bold">
+                                 <i class="bi bi-pencil-fill me-1"></i> Chỉnh Sửa Đơn Hàng
+                             </a>
+                             <a href="@Url.Action("Delete", "Order", new { id = Model.Id })" class="btn btn-danger px-4 py-2 rounded-pill shadow-sm font-weight-bold" onclick="return confirm('Xóa đơn hàng này?')">
+                                 <i class="bi bi-trash-fill me-1"></i> Xóa Đơn
+                             </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .rounded-lg { border-radius: 1.25rem !important; }
+    .rounded-top-lg { border-top-left-radius: 1.25rem !important; border-top-right-radius: 1.25rem !important; }
+    .italic { font-style: italic; }
+</style>

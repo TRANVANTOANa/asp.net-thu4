@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CMS.Data;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CMS.Backend.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -20,14 +22,21 @@ namespace CMS.Backend.Controllers
 
         public IActionResult Index()
         {
-            // LINQ: Lấy 3 bài viết mới nhất
-            var latestPosts = _context.Posts
-                              .Include(p => p.Category) // Lấy kèm tên danh mục để hiển thị
-                              .OrderByDescending(p => p.CreatedDate) // Sắp xếp ngày mới nhất lên đầu
-                              .Take(3) // Chỉ lấy đúng 3 bản tin đầu tiên
-                              .ToList();
+            // Thống kê nhanh cho Dashboard
+            ViewBag.TotalPosts = _context.Posts.Count();
+            ViewBag.TotalUsers = _context.Users.Count();
+            ViewBag.TotalProducts = _context.Products.Count();
+            ViewBag.TotalOrders = _context.Orders.Count();
+            ViewBag.TotalCategories = _context.CategoryProducts.Count();
 
-            return View(latestPosts);
+            // Lấy danh sách bài viết mới nhất
+            var posts = _context.Posts
+                                .Include(p => p.Category)
+                                .OrderByDescending(p => p.CreatedDate)
+                                .Take(6)
+                                .ToList();
+
+            return View(posts);
         }
 
         public IActionResult Privacy()

@@ -1,0 +1,116 @@
+@model CMS.Data.entities.OrderDetail
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Cập Nhật Chi Tiết Đơn Hàng";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-9 col-lg-8">
+            <div class="card border-0 shadow-lg rounded-lg">
+                <div class="card-header bg-warning text-dark text-center py-4 rounded-top">
+                    <h3 class="card-title mb-0 text-uppercase font-weight-bold">
+                        <i class="bi bi-pencil-square me-2"></i>Cập Nhật Chi Tiết
+                    </h3>
+                    <p class="mb-0 mt-1" style="color:rgba(0,0,0,.6);">Sửa số lượng hoặc giá của sản phẩm trong đơn hàng</p>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" class="needs-validation">
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.Id)
+
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div class="alert alert-danger rounded mb-4">
+                                <i class="bi bi-exclamation-triangle me-2"></i><strong>Có lỗi trong quá trình lưu:</strong>
+                                <ul class="mb-0 mt-2">
+                                    @foreach (var ms in ViewData.ModelState.Values)
+                                    {
+                                        @foreach (var err in ms.Errors)
+                                        {
+                                            <li>@err.ErrorMessage</li>
+                                        }
+                                    }
+                                </ul>
+                            </div>
+                        }
+
+                        <!-- Đơn hàng (Readonly-like) -->
+                        <div class="mb-3">
+                            <label for="OrderId" class="form-label font-weight-bold text-secondary">Mã Đơn Hàng</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-secondary"><i class="bi bi-hash"></i></span>
+                                <select class="form-select" id="OrderId" name="OrderId" required>
+                                    @if (ViewBag.OrderList != null)
+                                    {
+                                        @foreach (var order in (List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>)ViewBag.OrderList)
+                                        {
+                                            <option value="@order.Value" selected="@(Model.OrderId.ToString() == order.Value)">@order.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Sản phẩm -->
+                        <div class="mb-3">
+                            <label for="ProductId" class="form-label font-weight-bold text-secondary">Sản Phẩm</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-secondary"><i class="bi bi-box-seam"></i></span>
+                                <select class="form-select" id="ProductId" name="ProductId" required>
+                                    @if (ViewBag.ProductList != null)
+                                    {
+                                        @foreach (var product in (List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>)ViewBag.ProductList)
+                                        {
+                                            <option value="@product.Value" selected="@(Model.ProductId.ToString() == product.Value)">@product.Text</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Số lượng -->
+                            <div class="col-md-6 mb-3">
+                                <label for="Quantity" class="form-label font-weight-bold text-secondary">
+                                    Số Lượng <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-secondary"><i class="bi bi-collection"></i></span>
+                                    <input type="number" class="form-control" id="Quantity" name="Quantity" value="@Model.Quantity" min="1" required />
+                                </div>
+                            </div>
+                            
+                            <!-- Đơn giá -->
+                            <div class="col-md-6 mb-4">
+                                <label for="UnitPrice" class="form-label font-weight-bold text-secondary">
+                                    Đơn Giá (VNĐ) <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-secondary"><i class="bi bi-currency-exchange"></i></span>
+                                    <input type="number" class="form-control" id="UnitPrice" name="UnitPrice" value="@Model.UnitPrice" step="1000" required />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Hành động -->
+                        <div class="d-flex justify-content-between align-items-center pt-3 border-top border-light">
+                            <a href="@Url.Action("Index", "OrderDetail")" class="btn btn-outline-secondary px-4 py-2 rounded-pill">
+                                <i class="bi bi-arrow-left me-1"></i> Quay lại
+                            </a>
+                            <button type="submit" class="btn btn-warning text-dark px-4 py-2 rounded-pill shadow-sm font-weight-bold">
+                                <i class="bi bi-save-fill me-1"></i> Lưu thay đổi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .rounded-lg  { border-radius: 16px !important; }
+    .rounded-top { border-top-left-radius: 16px !important; border-top-right-radius: 16px !important; }
+</style>

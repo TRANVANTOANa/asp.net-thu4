@@ -1,0 +1,108 @@
+@model List<CMS.Data.entities.OrderDetail>
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Chi Tiết Đơn Hàng";
+}
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-primary">
+        <h2 class="mb-0 text-primary font-weight-bold text-uppercase">
+            <i class="bi bi-list-check me-2"></i>Chi Tiết Đơn Hàng
+        </h2>
+        <div>
+            @if (ViewBag.SelectedOrderId != null)
+            {
+                <a href="@Url.Action("Create", "OrderDetail", new { orderId = ViewBag.SelectedOrderId })" class="btn btn-primary px-4 py-2 rounded-pill shadow-sm me-2">
+                    <i class="bi bi-plus-circle-fill me-2"></i>Thêm Sản Phẩm
+                </a>
+            }
+            <a href="@Url.Action("Index", "Order")" class="btn btn-outline-secondary px-4 py-2 rounded-pill shadow-sm">
+                <i class="bi bi-arrow-left me-2"></i>Quay lại danh sách đơn
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm rounded" role="alert">
+            <i class="bi bi-exclamation-circle me-2"></i>@TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (Model.Count == 0)
+    {
+        <div class="alert alert-info text-center py-5 shadow-sm rounded-lg" role="alert">
+            <i class="bi bi-info-circle-fill fs-1 text-info mb-3 d-block"></i>
+            <h4 class="alert-heading">Đơn hàng trống!</h4>
+            <p class="mb-0 text-muted">Chưa có sản phẩm nào trong chi tiết đơn hàng này.</p>
+        </div>
+    }
+    else
+    {
+        <div class="card border-0 shadow-sm rounded-lg overflow-hidden">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col" style="width:10%;">Mã Đơn</th>
+                            <th scope="col" style="width:30%;">Sản Phẩm</th>
+                            <th scope="col" style="width:10%;" class="text-center">Số Lượng</th>
+                            <th scope="col" style="width:15%;" class="text-end">Đơn Giá</th>
+                            <th scope="col" style="width:15%;" class="text-end">Thành Tiền</th>
+                            <th scope="col" style="width:20%;" class="text-center">Hành Động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var detail in Model)
+                        {
+                            <tr>
+                                <th scope="row">#@detail.OrderId</th>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-light p-2 rounded me-3">
+                                            <i class="bi bi-box-seam text-primary"></i>
+                                        </div>
+                                        <strong>@detail.Product?.Name</strong>
+                                    </div>
+                                </td>
+                                <td class="text-center fw-bold">@detail.Quantity</td>
+                                <td class="text-end text-muted">@detail.UnitPrice.ToString("N0") ₫</td>
+                                <td class="text-end fw-bold text-success">
+                                    @((detail.Quantity * detail.UnitPrice).ToString("N0")) ₫
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group" role="group">
+                                        <a href="@Url.Action("Edit", "OrderDetail", new { id = detail.Id })"
+                                           class="btn btn-outline-warning btn-sm rounded me-1">
+                                            <i class="bi bi-pencil-square"></i> Sửa
+                                        </a>
+                                        <a href="@Url.Action("Delete", "OrderDetail", new { id = detail.Id })"
+                                           class="btn btn-outline-danger btn-sm rounded"
+                                           onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này khỏi đơn hàng?')">
+                                            <i class="bi bi-trash-fill"></i> Xóa
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot class="bg-light">
+                        <tr>
+                            <td colspan="4" class="text-end fw-bold fs-5 py-3">Tổng Cộng:</td>
+                            <td class="text-end fw-bold fs-5 text-danger py-3">
+                                @(Model.Sum(d => d.Quantity * d.UnitPrice).ToString("N0")) ₫
+                            </td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .rounded-lg { border-radius: 12px !important; }
+</style>

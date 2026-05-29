@@ -1,0 +1,106 @@
+@model List<CMS.Data.entities.Order>
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Quản Lý Đơn Hàng";
+}
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-primary">
+        <h2 class="mb-0 text-primary font-weight-bold text-uppercase">
+            <i class="bi bi-cart-check-fill me-2"></i>Quản Lý Đơn Hàng
+        </h2>
+        <a href="@Url.Action("Create", "Order")" class="btn btn-primary px-4 py-2 rounded-pill shadow-sm">
+            <i class="bi bi-plus-circle-fill me-2"></i>Thêm Đơn Hàng Mới
+        </a>
+    </div>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm rounded" role="alert">
+            <i class="bi bi-exclamation-circle me-2"></i>@TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (Model.Count == 0)
+    {
+        <div class="alert alert-info text-center py-5 shadow-sm rounded-lg" role="alert">
+            <i class="bi bi-info-circle-fill fs-1 text-info mb-3 d-block"></i>
+            <h4 class="alert-heading">Chưa có đơn hàng nào!</h4>
+            <p class="mb-0 text-muted">Nhấn nút "Thêm Đơn Hàng Mới" phía trên để tạo đơn hàng đầu tiên.</p>
+        </div>
+    }
+    else
+    {
+        <div class="card border-0 shadow-sm rounded-lg overflow-hidden">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col" style="width:6%;">ID</th>
+                            <th scope="col" style="width:24%;">Khách Hàng</th>
+                            <th scope="col" style="width:20%;">Ngày Đặt</th>
+                            <th scope="col" style="width:16%;" class="text-center">Trạng Thái</th>
+                            <th scope="col" style="width:18%;">Ghi Chú</th>
+                            <th scope="col" style="width:16%;" class="text-center">Hành Động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model)
+                        {
+                            string badgeClass = "bg-secondary";
+                            string statusText = "Không Xác Định";
+                            
+                            switch (order.Status)
+                            {
+                                case 0: badgeClass = "bg-secondary"; statusText = "Chờ Duyệt"; break;
+                                case 1: badgeClass = "bg-warning text-dark"; statusText = "Đang Giao"; break;
+                                case 2: badgeClass = "bg-success"; statusText = "Đã Xong"; break;
+                            }
+                            
+                            <tr>
+                                <th scope="row">@order.Id</th>
+                                <td>
+                                    <i class="bi bi-person-heart text-primary me-2"></i>
+                                    <strong>@order.Customer?.FullName</strong>
+                                </td>
+                                <td class="text-muted">
+                                    <i class="bi bi-calendar3 me-1"></i>
+                                    @order.OrderDate.ToString("dd/MM/yyyy HH:mm")
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge rounded-pill px-3 py-2 @badgeClass">
+                                        @statusText
+                                    </span>
+                                </td>
+                                <td class="text-muted">@(string.IsNullOrEmpty(order.Notes) ? "—" : order.Notes)</td>
+                                <td class="text-center">
+                                    <div class="btn-group" role="group">
+                                        <a href="@Url.Action("Details", "Order", new { id = order.Id })"
+                                           class="btn btn-outline-info btn-sm rounded me-1">
+                                            <i class="bi bi-eye me-1"></i>Chi tiết
+                                        </a>
+                                        <a href="@Url.Action("Edit", "Order", new { id = order.Id })"
+                                           class="btn btn-outline-warning btn-sm rounded me-1">
+                                            <i class="bi bi-pencil-square me-1"></i>Sửa
+                                        </a>
+                                        <a href="@Url.Action("Delete", "Order", new { id = order.Id })"
+                                           class="btn btn-outline-danger btn-sm rounded"
+                                           onclick="return confirm('Bạn có chắc muốn xóa đơn hàng #@order.Id không?')">
+                                            <i class="bi bi-trash-fill me-1"></i>Xóa
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .rounded-lg { border-radius: 12px !important; }
+</style>

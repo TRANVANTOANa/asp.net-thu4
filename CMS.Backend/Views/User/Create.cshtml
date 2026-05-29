@@ -2,49 +2,107 @@
 
 @{
     Layout = "_LayoutAdmin";
-    ViewData["Title"] = "Thêm thành viên";
+    ViewData["Title"] = "Thêm Thành Viên Mới";
 }
 
-<div class="container mt-4">
-    <div class="card shadow-sm">
-        <div class="card-header bg-dark text-white">
-            <h4 class="mb-0"><i class="bi bi-person-plus me-2"></i>THÊM THÀNH VIÊN HỆ THỐNG</h4>
-        </div>
-        <div class="card-body">
-            <form asp-action="Create" method="post">
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">Tên đăng nhập (Username):</label>
-                        <input asp-for="Username" class="form-control" placeholder="Ví dụ: admin_thai" required />
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">Mật khẩu:</label>
-                        <input asp-for="PasswordHash" type="password" class="form-control" required />
-                    </div>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+            <div class="card border-0 shadow-lg rounded-lg">
+                <div class="card-header bg-primary text-white text-center py-4 rounded-top">
+                    <h3 class="card-title mb-0 text-uppercase font-weight-bold">
+                        <i class="bi bi-person-plus-fill me-2"></i>Thêm Thành Viên Mới
+                    </h3>
+                    <p class="mb-0 text-white-50 mt-1">Điền thông tin bên dưới để tạo tài khoản mới</p>
                 </div>
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">Họ và Tên:</label>
-                        <input asp-for="FullName" class="form-control" placeholder="Nguyễn Văn A" required />
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label fw-bold">Vai trò (Role):</label>
-                        <select asp-for="Role" class="form-select" required>
-                            <option value="">-- Chọn quyền hạn --</option>
-                            <option value="Admin">Quản trị viên (Admin)</option>
-                            <option value="Editor">Biên tập viên (Editor)</option>
-                        </select>
-                    </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create" method="post">
+
+                        <div class="row">
+                            <!-- Tên đăng nhập -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Username" class="form-label font-weight-bold text-secondary">
+                                    Tên Đăng Nhập <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-secondary">
+                                        <i class="bi bi-person"></i>
+                                    </span>
+                                    <input asp-for="Username" class="form-control"
+                                           placeholder="Ví dụ: admin_thai" required />
+                                </div>
+                                <span asp-validation-for="Username" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Mật khẩu -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="PasswordHash" class="form-label font-weight-bold text-secondary">
+                                    Mật Khẩu <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-secondary">
+                                        <i class="bi bi-lock"></i>
+                                    </span>
+                                    <input asp-for="PasswordHash" type="password" class="form-control"
+                                           placeholder="Nhập mật khẩu" required />
+                                </div>
+                                <span asp-validation-for="PasswordHash" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <!-- Họ và tên -->
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="FullName" class="form-label font-weight-bold text-secondary">
+                                    Họ Và Tên <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-secondary">
+                                        <i class="bi bi-card-text"></i>
+                                    </span>
+                                    <input asp-for="FullName" class="form-control"
+                                           placeholder="Nguyễn Văn A" required />
+                                </div>
+                                <span asp-validation-for="FullName" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Vai trò -->
+                            <div class="col-md-6 mb-4">
+                                <label asp-for="Role" class="form-label font-weight-bold text-secondary">
+                                    Vai Trò <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-secondary">
+                                        <i class="bi bi-shield-lock"></i>
+                                    </span>
+                                    <select asp-for="Role" class="form-select" required>
+                                        <option value="">-- Chọn quyền hạn --</option>
+                                        <option value="Admin">Quản Trị Viên (Admin)</option>
+                                        <option value="Editor">Biên Tập Viên (Editor)</option>
+                                    </select>
+                                </div>
+                                <span asp-validation-for="Role" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <!-- Hành động -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a asp-action="Index" class="btn btn-outline-secondary px-4 py-2 rounded-pill">
+                                <i class="bi bi-arrow-left me-1"></i> Quay lại
+                            </a>
+                            <button type="submit" class="btn btn-primary px-4 py-2 rounded-pill shadow-sm">
+                                <i class="bi bi-check-circle-fill me-1"></i> Lưu thành viên
+                            </button>
+                        </div>
+
+                    </form>
                 </div>
-                <div class="mt-3 d-flex gap-2">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-check-circle me-1"></i> Lưu thành viên
-                    </button>
-                    <a asp-action="Index" class="btn btn-secondary">
-                        <i class="bi bi-arrow-left me-1"></i> Quay lại
-                    </a>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+    .rounded-lg  { border-radius: 16px !important; }
+    .rounded-top { border-top-left-radius: 16px !important; border-top-right-radius: 16px !important; }
+</style>
